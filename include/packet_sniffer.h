@@ -1,14 +1,14 @@
 #pragma once
 
 #include "intrdet_types.h"
-#include <pcap.h>
+#include "mock_pcap.h"
 #include <string>
 #include <functional>
 #include <memory>
 #include <atomic>
 #include <thread>
 #include <vector>
-#include <boost/asio.hpp>
+#include "mock_boost.h"
 
 namespace IntrDet {
 

@@ -116,6 +116,7 @@ void AnomalyDetector::update_config(const Config& new_config) {
 }
 
 bool AnomalyDetector::load_ml_model(const std::string& model_path) {
+    (void)model_path; // Suppress unused parameter warning
 #ifdef ENABLE_ML_INFERENCE
     try {
         // Initialize ONNX Runtime environment
@@ -293,6 +294,7 @@ double AnomalyDetector::calculate_z_score(double value, double mean, double std_
 }
 
 void AnomalyDetector::detect_ml_anomalies(const ParsedPacket& packet) {
+    (void)packet; // Suppress unused parameter warning
 #ifdef ENABLE_ML_INFERENCE
     if (!ml_model_loaded_) {
         return;

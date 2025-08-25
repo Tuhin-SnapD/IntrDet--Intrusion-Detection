@@ -37,25 +37,40 @@ public:
     // Configuration structure
     struct Config {
         // Rule-based detection thresholds
-        uint32_t syn_flood_threshold = 100;      // SYN packets per second
-        uint32_t port_scan_threshold = 50;       // Unique ports per minute
-        uint32_t connection_rate_threshold = 1000; // Connections per second
-        uint32_t payload_size_threshold = 1500;  // Suspicious payload size
+        uint32_t syn_flood_threshold;
+        uint32_t port_scan_threshold;
+        uint32_t connection_rate_threshold;
+        uint32_t payload_size_threshold;
         
         // Statistical detection parameters
-        double z_score_threshold = 3.0;          // Standard deviations
-        size_t moving_average_window = 1000;     // Packets for moving average
-        double anomaly_confidence_threshold = 0.8; // ML confidence threshold
+        double z_score_threshold;
+        size_t moving_average_window;
+        double anomaly_confidence_threshold;
         
         // Time windows
-        std::chrono::seconds syn_flood_window{1};
-        std::chrono::seconds port_scan_window{60};
-        std::chrono::seconds connection_window{1};
-        std::chrono::seconds statistics_window{300}; // 5 minutes
+        std::chrono::seconds syn_flood_window;
+        std::chrono::seconds port_scan_window;
+        std::chrono::seconds connection_window;
+        std::chrono::seconds statistics_window;
         
         // ML model configuration
         std::string ml_model_path;
-        bool enable_ml_inference = false;
+        bool enable_ml_inference;
+        
+        Config() 
+            : syn_flood_threshold(100)
+            , port_scan_threshold(50)
+            , connection_rate_threshold(1000)
+            , payload_size_threshold(1500)
+            , z_score_threshold(3.0)
+            , moving_average_window(1000)
+            , anomaly_confidence_threshold(0.8)
+            , syn_flood_window(1)
+            , port_scan_window(60)
+            , connection_window(1)
+            , statistics_window(300)
+            , ml_model_path("")
+            , enable_ml_inference(false) {}
     };
 
     explicit AnomalyDetector(const Config& config = Config{});

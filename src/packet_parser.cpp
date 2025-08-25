@@ -284,6 +284,11 @@ uint16_t PacketParser::calculate_tcp_checksum(
     uint32_t total_length = sizeof(pseudo_header) + sizeof(TcpHeader) + payload_length;
     std::vector<uint8_t> buffer(total_length);
     
+    // Ensure buffer is not empty
+    if (buffer.empty()) {
+        return 0;
+    }
+    
     // Copy pseudo-header
     std::memcpy(buffer.data(), &pseudo_header, sizeof(pseudo_header));
     

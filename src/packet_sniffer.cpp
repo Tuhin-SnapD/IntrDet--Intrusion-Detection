@@ -214,10 +214,10 @@ void PacketSniffer::update_statistics() {
         std::lock_guard<std::mutex> lock(stats_mutex_);
         
         // Get pcap statistics
-        struct pcap_stat pcap_stats;
-        if (pcap_stats(pcap_handle_, &pcap_stats) == 0) {
-            stats_.packets_dropped = pcap_stats.ps_drop;
-            stats_.packets_if_dropped = pcap_stats.ps_ifdrop;
+        struct pcap_stat stats;
+        if (pcap_stats(pcap_handle_, &stats) == 0) {
+            stats_.packets_dropped = stats.ps_drop;
+            stats_.packets_if_dropped = stats.ps_ifdrop;
         }
         
         // Calculate rates

@@ -361,10 +361,12 @@ void AlertManager::start_websocket_server() {
 }
 
 void AlertManager::handle_rest_request(const boost::asio::ip::tcp::endpoint& endpoint) {
+    (void)endpoint; // Suppress unused parameter warning
     // Placeholder for REST request handling
 }
 
 void AlertManager::handle_websocket_connection(const boost::asio::ip::tcp::endpoint& endpoint) {
+    (void)endpoint; // Suppress unused parameter warning
     // Placeholder for WebSocket connection handling
 }
 
@@ -373,6 +375,7 @@ std::string AlertManager::alert_to_json(const Alert& alert) const {
 }
 
 std::string AlertManager::alert_to_protobuf(const Alert& alert) const {
+    (void)alert; // Suppress unused parameter warning
     // Placeholder for protobuf serialization
     return "protobuf_placeholder";
 }

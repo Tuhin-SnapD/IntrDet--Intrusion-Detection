@@ -9,7 +9,7 @@
 #include <memory>
 #include <mutex>
 #include <condition_variable>
-#include <boost/lockfree/queue.hpp>
+#include "mock_boost.h"
 
 namespace IntrDet {
 
@@ -30,12 +30,20 @@ public:
     
     // Configuration structure
     struct Config {
-        size_t num_workers = std::thread::hardware_concurrency();
-        size_t queue_size = 10000;
-        size_t batch_size = 100;
-        std::chrono::milliseconds worker_timeout{100};
-        bool enable_statistics = true;
-        std::chrono::seconds statistics_window{60};
+        size_t num_workers;
+        size_t queue_size;
+        size_t batch_size;
+        std::chrono::milliseconds worker_timeout;
+        bool enable_statistics;
+        std::chrono::seconds statistics_window;
+        
+        Config() 
+            : num_workers(std::thread::hardware_concurrency())
+            , queue_size(10000)
+            , batch_size(100)
+            , worker_timeout(100)
+            , enable_statistics(true)
+            , statistics_window(60) {}
     };
 
     explicit ProcessingPipeline(const Config& config = Config{});
@@ -126,11 +134,39 @@ private:
         std::atomic<uint64_t> packets_processed{0};
         std::atomic<uint64_t> errors{0};
         std::atomic<double> total_processing_time{0.0};
+        
+        // Make Stage movable
+        Stage() = default;
+        Stage(const Stage&) = delete;
+        Stage& operator=(const Stage&) = delete;
+        Stage(Stage&& other) noexcept 
+            : name(std::move(other.name))
+            , function(std::move(other.function))
+            , packets_processed(other.packets_processed.load())
+            , errors(other.errors.load())
+            , total_processing_time(other.total_processing_time.load()) {}
+        
+        Stage(const std::string& n, ProcessingStage f) 
+            : name(n)
+            , function(std::move(f))
+            , packets_processed(0)
+            , errors(0)
+            , total_processing_time(0.0) {}
+        Stage& operator=(Stage&& other) noexcept {
+            if (this != &other) {
+                name = std::move(other.name);
+                function = std::move(other.function);
+                packets_processed.store(other.packets_processed.load());
+                errors.store(other.errors.load());
+                total_processing_time.store(other.total_processing_time.load());
+            }
+            return *this;
+        }
     };
     std::vector<Stage> stages_;
     
     // Lock-free queue for packet processing
-    using PacketQueue = boost::lockfree::queue<ParsedPacket>;
+    using PacketQueue = boost::lockfree::queue<ParsedPacket, 10000>;
     std::unique_ptr<PacketQueue> packet_queue_;
     
     // Worker threads

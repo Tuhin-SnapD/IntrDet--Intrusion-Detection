@@ -10,7 +10,9 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include <boost/asio.hpp>
+#include <unordered_set>
+#include <sstream>
+#include "mock_boost.h"
 
 namespace IntrDet {
 
@@ -57,7 +59,7 @@ public:
         std::string websocket_bind_address = "0.0.0.0";
     };
 
-    explicit AlertManager(const Config& config = Config{});
+    explicit AlertManager(const Config& config);
     ~AlertManager();
 
     // Disable copy

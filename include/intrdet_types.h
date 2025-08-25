@@ -5,6 +5,7 @@
 #include <string>
 #include <chrono>
 #include <memory>
+#include <iostream>
 
 namespace IntrDet {
 
@@ -191,4 +192,27 @@ struct PacketStatistics {
 };
 
 } // namespace IntrDet
+
+// Stream operators for enums
+inline std::ostream& operator<<(std::ostream& os, IntrDet::AlertType type) {
+    switch (type) {
+        case IntrDet::AlertType::SYN_FLOOD: return os << "SYN_FLOOD";
+        case IntrDet::AlertType::PORT_SCAN: return os << "PORT_SCAN";
+        case IntrDet::AlertType::ANOMALOUS_TRAFFIC: return os << "ANOMALOUS_TRAFFIC";
+        case IntrDet::AlertType::SUSPICIOUS_PAYLOAD: return os << "SUSPICIOUS_PAYLOAD";
+        case IntrDet::AlertType::RATE_LIMIT_EXCEEDED: return os << "RATE_LIMIT_EXCEEDED";
+        case IntrDet::AlertType::ML_ANOMALY: return os << "ML_ANOMALY";
+        default: return os << "UNKNOWN";
+    }
+}
+
+inline std::ostream& operator<<(std::ostream& os, IntrDet::AlertSeverity severity) {
+    switch (severity) {
+        case IntrDet::AlertSeverity::LOW: return os << "LOW";
+        case IntrDet::AlertSeverity::MEDIUM: return os << "MEDIUM";
+        case IntrDet::AlertSeverity::HIGH: return os << "HIGH";
+        case IntrDet::AlertSeverity::CRITICAL: return os << "CRITICAL";
+        default: return os << "UNKNOWN";
+    }
+}
 

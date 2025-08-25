@@ -5,7 +5,7 @@ namespace IntrDet {
 
 ProcessingPipeline::ProcessingPipeline(const Config& config)
     : config_(config)
-    , packet_queue_(std::make_unique<PacketQueue>(config.queue_size))
+    , packet_queue_(std::make_unique<PacketQueue>())
     , running_(false)
     , should_stop_(false)
 {
@@ -135,7 +135,7 @@ ProcessingPipeline::PipelineStatistics ProcessingPipeline::get_statistics() cons
 }
 
 size_t ProcessingPipeline::get_queue_depth() const {
-    return packet_queue_->read_available();
+    return packet_queue_->size();
 }
 
 void ProcessingPipeline::worker_thread(size_t worker_id) {
